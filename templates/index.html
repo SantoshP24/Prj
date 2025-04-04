@@ -6,37 +6,38 @@
     <title>Hate Speech Detection Engine</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <!-- *** UPDATED FONT SELECTION *** -->
-    <!-- Merriweather for headings, Lato for body -->
-    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&family=Merriweather:wght@700;900&display=swap" rel="stylesheet">
+    <!-- Using Poppins for a more modern feel, keeping Merriweather for strong headings -->
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700;900&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            /* *** REFINED COLOR PALETTE *** */
-            --background-color: #f8f9fa; /* Slightly off-white background */
-            --content-bg-color: #ffffff; /* White for content cards */
-            --text-color: #343a40;       /* Darker gray for text */
-            --secondary-text-color: #6c757d; /* Medium gray */
-            --border-color: #dee2e6;     /* Lighter border */
-            --header-bg-color: #212529; /* Dark header */
-            --header-text-color: #f8f9fa; /* Light text for header */
-            --button-bg-color: #343a40; /* Button matches dark theme elements */
-            --button-text-color: #ffffff;
-            --button-hover-bg-color: #495057; /* Slightly lighter dark */
-            --error-border-color: #dc3545; /* Bootstrap danger red */
-            --error-text-color: #721c24;   /* Darker red */
-            --error-bg-color: #f8d7da;     /* Light red */
-            --info-border-color: #17a2b8;  /* Bootstrap info cyan */
-            --info-text-color: #0c5460;    /* Darker cyan */
-            --info-bg-color: #d1ecf1;     /* Light cyan */
-            --not-hate-border: #6c757d;    /* Gray for Not Hate */
-            --hate-border: #343a40;        /* Dark Gray/Black for Hate */
-            --border-radius: 6px;         /* Slightly larger radius */
-            --box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08); /* Softer shadow */
-            --enhanced-shadow: 0 6px 20px rgba(0, 0, 0, 0.1); /* For hover/emphasis */
+            /* --- Refined Color Palette --- */
+            --bg-light: #f9fafb; /* Very light gray background */
+            --bg-white: #ffffff;
+            --text-dark: #1f2937; /* Darker text */
+            --text-medium: #4b5563; /* Medium gray */
+            --text-light: #6b7280; /* Lighter gray */
+            --border-color: #e5e7eb; /* Light border */
+            --header-bg: #111827; /* Very dark gray */
+            --header-text: #f3f4f6;
+            --primary-accent: #3b82f6; /* Primary Blue */
+            --primary-accent-hover: #2563eb;
+            --button-text: #ffffff;
+            --error-border: #ef4444; /* Red */
+            --error-text: #991b1b;
+            --error-bg: #fee2e2;
+            --info-border: #0ea5e9; /* Sky Blue */
+            --info-text: #0c4a6e;
+            --info-bg: #e0f2fe;
+            --not-hate-border: #6b7280; /* Gray */
+            --hate-border: #1f2937;    /* Dark Gray/Black */
+            --border-radius: 8px;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
 
-            /* *** FONT FAMILIES *** */
+            /* --- Font Families --- */
             --heading-font: 'Merriweather', serif;
-            --body-font: 'Lato', sans-serif;
+            --body-font: 'Poppins', sans-serif;
         }
 
         html { scroll-behavior: smooth; }
@@ -45,306 +46,321 @@
             line-height: 1.7;
             margin: 0;
             padding: 0;
-            background-color: var(--background-color);
-            color: var(--text-color);
-            /* *** ANIMATION: Subtle fade-in for the whole body on load *** */
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            font-weight: 400; /* Default weight */
             opacity: 0;
             animation: fadeInBody 0.5s 0.1s ease-out forwards;
         }
 
         /* --- Header --- */
         .header-bar {
-            background-color: var(--header-bg-color);
-            color: var(--header-text-color);
-            padding: 1em 2.5em; /* Increased padding */
+            background-color: var(--header-bg);
+            color: var(--header-text);
+            padding: 0.9em 3em; /* Adjusted padding */
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.3); /* Stronger shadow */
+            box-shadow: var(--shadow-md);
             position: sticky;
             top: 0;
             z-index: 1000;
         }
         .header-bar .logo h1 {
             margin: 0;
-            /* *** HEADING FONT *** */
             font-family: var(--heading-font);
-            font-size: 1.9rem; /* Slightly larger */
-            font-weight: 900;  /* Bolder */
-            letter-spacing: 1px;
-            color: var(--header-text-color);
+            font-size: 1.6rem; /* Slightly smaller logo */
+            font-weight: 900;
+            letter-spacing: 0.5px;
+            color: var(--header-text);
             text-transform: uppercase;
             display: flex;
             align-items: center;
-            /* *** ANIMATION: Slight scale on hover *** */
             transition: transform 0.2s ease-out;
         }
-        .header-bar .logo h1:hover {
-             transform: scale(1.02);
-        }
-        .header-bar .logo h1 .icon { margin-right: 0.5em; font-size: 1.6rem; opacity: 0.9; }
+        .header-bar .logo h1:hover { transform: scale(1.02); }
+        .header-bar .logo h1 .icon { margin-right: 0.6em; font-size: 1.5rem; opacity: 1; }
         .header-bar nav a {
-            color: var(--header-text-color);
+            color: #d1d5db; /* Lighter gray for links */
             text-decoration: none;
-            margin-left: 1.8em; /* Increased spacing */
-            font-size: 1rem; /* Slightly larger nav links */
-            transition: color 0.2s ease, opacity 0.2s ease;
-            opacity: 0.85;
-            font-weight: 400; /* Regular weight for nav */
+            margin-left: 2em;
+            font-size: 0.95rem;
+            font-weight: 500; /* Medium weight */
+            transition: color 0.2s ease;
+            opacity: 0.9;
         }
-        .header-bar nav a:hover {
-            opacity: 1;
-            color: #ffffff; /* Brighter white on hover */
-            text-decoration: none; /* Remove underline, rely on opacity/color */
+        .header-bar nav a:hover { color: var(--header-text); opacity: 1; }
+
+        /* --- Hero Section --- */
+        #hero {
+            background: linear-gradient(45deg, var(--header-bg) 0%, #374151 100%); /* Subtle gradient */
+            color: var(--bg-white);
+            text-align: center;
+            padding: 4em 2em 4.5em 2em;
+            margin-bottom: 3em; /* Space before first card */
+        }
+        #hero h2 {
+            font-family: var(--heading-font);
+            font-size: 2.8rem;
+            margin-top: 0;
+            margin-bottom: 0.4em;
+            font-weight: 900;
+            letter-spacing: 1px;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+        }
+        #hero p {
+            font-size: 1.15rem;
+            color: #e5e7eb; /* Lighter text */
+            max-width: 700px;
+            margin: 0 auto;
+            font-weight: 300; /* Lighter weight for subtext */
         }
 
-        /* --- Main Content & Sections --- */
-        .content-section {
-            padding: 3em 3.5em; /* Increased padding */
-            max-width: 850px; /* Slightly wider */
-            margin: 2em auto 3em auto; /* Added top margin */
-            background-color: var(--content-bg-color); /* White card background */
+        /* --- Container & Cards --- */
+        .container {
+            max-width: 850px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 0 1.5em; /* Padding for smaller screens */
+        }
+        .content-card {
+            background-color: var(--bg-white);
             border-radius: var(--border-radius);
-            box-shadow: var(--box-shadow);
-            /* *** ANIMATION: Staggered slide-up fade-in for sections *** */
+            box-shadow: var(--shadow-md);
+            margin-bottom: 3em;
+            padding: 2.5em 3em; /* Generous padding */
+            overflow: hidden; /* Contain shadows/borders */
+            /* Animation */
             opacity: 0;
             transform: translateY(20px);
             animation: slideUpFadeIn 0.6s ease-out forwards;
         }
-        /* Stagger the animation */
-        #analysis-section { animation-delay: 0.2s; margin-top: 4em; }
-        #about { animation-delay: 0.3s; }
-        #contact { animation-delay: 0.4s; }
+        #analysis-section { animation-delay: 0.1s; }
+        #about { animation-delay: 0.2s; }
+        #contact { animation-delay: 0.3s; }
 
         .section-title {
-             /* *** HEADING FONT *** */
             font-family: var(--heading-font);
-            font-size: 1.8rem; /* Larger section titles */
+            font-size: 1.7rem;
             font-weight: 700;
-            margin-bottom: 1.2em;
-            color: var(--text-color);
-            border-bottom: 3px solid var(--border-color); /* Thicker border */
-            padding-bottom: 0.5em;
+            margin-top: 0;
+            margin-bottom: 1.5em;
+            color: var(--text-dark);
+            border-bottom: 2px solid var(--primary-accent); /* Use accent for border */
+            padding-bottom: 0.6em;
             display: flex;
             align-items: center;
         }
-        .section-title .icon { margin-right: 0.5em; font-size: 1.6rem; opacity: 0.85; color: var(--button-bg-color); /* Icon color matches button */ }
-        .intro-text { color: var(--secondary-text-color); margin-bottom: 1.5em; text-align: center; font-size: 1.1rem; /* Larger intro */ }
-        .analysis-method { text-align: center; margin-bottom: 2.5em; color: var(--secondary-text-color); font-style: italic; font-size: 0.95rem; }
+        .section-title .icon {
+            margin-right: 0.6em;
+            font-size: 1.6rem;
+            opacity: 1;
+            color: var(--primary-accent); /* Accent color icon */
+        }
 
-        label { font-weight: 700; display: block; margin-bottom: 0.8em; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.8px; /* More spacing */ color: var(--text-color); }
+        /* --- Forms --- */
+        label {
+            font-weight: 600; /* Semibold */
+            display: block;
+            margin-bottom: 0.8em;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--text-medium);
+        }
         textarea {
             width: 100%;
-            padding: 18px; /* More padding */
-            margin-bottom: 1.8em;
+            padding: 16px;
+            margin-bottom: 1.5em;
             border: 1px solid var(--border-color);
             border-radius: var(--border-radius);
-            min-height: 120px; /* Taller */
+            min-height: 120px;
             resize: vertical;
-            font-size: 1.05rem; /* Larger text area font */
+            font-size: 1rem;
             font-family: var(--body-font);
             box-sizing: border-box;
             transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-            background-color: #fff;
+            background-color: var(--bg-white);
+            color: var(--text-dark);
         }
+        textarea::placeholder { color: #9ca3af; } /* Placeholder color */
         textarea:focus {
-            border-color: var(--button-hover-bg-color); /* Use button hover color for focus */
+            border-color: var(--primary-accent);
             outline: none;
-            box-shadow: 0 0 0 3px rgba(52, 58, 64, 0.15); /* Subtle focus ring */
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3); /* Blue focus ring */
         }
-
-        /* --- File Upload Specific Styles --- */
-        .file-upload-area { border-top: 1px dashed var(--border-color); margin-top: 3em; padding-top: 2.5em; }
+        .file-upload-area { border-top: 1px dashed var(--border-color); margin-top: 2.5em; padding-top: 2.5em; }
         .file-input-wrapper {
             border: 2px dashed var(--border-color);
-            padding: 2em; /* More padding */
+            padding: 2em 1.5em;
             border-radius: var(--border-radius);
             text-align: center;
             cursor: pointer;
             transition: border-color 0.2s, background-color 0.2s, transform 0.2s;
             margin-bottom: 1em;
-            background-color: #fdfdfd; /* Very light gray */
+            background-color: var(--bg-light); /* Light bg for dropzone */
         }
         .file-input-wrapper:hover {
-            border-color: var(--secondary-text-color);
-            background-color: #f8f9fa;
-            transform: translateY(-2px); /* Slight lift on hover */
+            border-color: var(--primary-accent);
+            background-color: #eff6ff; /* Lighter blue on hover */
         }
         input[type="file"] { display: none; }
-        .file-upload-text { color: var(--secondary-text-color); font-size: 1.05rem; }
-        #file-name { font-weight: bold; color: var(--text-color); margin-top: 0.7em; display: block; font-size: 0.95rem; }
-        .instructions { font-size: 0.9em; color: #777; margin-top: 1em; }
+        .file-upload-text { color: var(--text-medium); font-size: 1rem; font-weight: 500; }
+        #file-name { font-weight: 600; color: var(--primary-accent); margin-top: 0.7em; display: block; font-size: 0.95rem; }
+        .instructions { font-size: 0.9em; color: var(--text-light); margin-top: 1em; }
 
-        button {
-            display: block;
+        button[type="submit"] {
+            display: inline-flex; /* Use inline-flex for centering icon/text */
+            align-items: center;
+            justify-content: center;
             width: 100%;
-            padding: 16px 25px; /* Larger padding */
-            background-color: var(--button-bg-color);
-            color: var(--button-text-color);
+            padding: 14px 25px; /* Slightly less vertical padding */
+            background-color: var(--primary-accent);
+            color: var(--button-text);
             border: none;
             border-radius: var(--border-radius);
             cursor: pointer;
-            font-size: 1.15rem; /* Larger button text */
-            font-weight: 700;
-            letter-spacing: 1px; /* More letter spacing */
-            /* *** ANIMATION: Smoother transition, added transform and shadow *** */
-            transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+            font-size: 1.1rem;
+            font-weight: 600; /* Semibold */
+            letter-spacing: 0.5px;
+            transition: background-color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
             text-transform: uppercase;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             margin-top: 2.5em;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            box-shadow: var(--shadow-sm);
         }
-        button .icon { margin-right: 0.6em; font-size: 1.25rem; }
-        button:hover {
-            background-color: var(--button-hover-bg-color);
-            /* *** ANIMATION: Lift effect on hover *** */
-            transform: translateY(-3px);
-            box-shadow: var(--enhanced-shadow);
+        button[type="submit"] .icon { margin-right: 0.7em; font-size: 1.2rem; }
+        button[type="submit"]:hover {
+            background-color: var(--primary-accent-hover);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
         }
 
-        /* --- Results & Errors --- */
-        .results-wrapper { margin-top: 3.5em; }
+        /* --- Results & Messages --- */
+        .results-wrapper { margin-top: 3em; }
         .result-section, .error-message, .info-message {
-            padding: 2em; /* Increased padding */
+            padding: 1.8em;
             border-radius: var(--border-radius);
             border: 1px solid var(--border-color);
-            background-color: var(--content-bg-color); /* Match content background */
-            /* *** ANIMATION: Use the existing fadeIn, ensure timing is good *** */
-            animation: fadeIn 0.5s 0.1s ease-in-out forwards; /* Added slight delay */
-            opacity: 0; /* Start hidden for animation */
-            border-left-width: 6px; /* Thicker side border */
+            background-color: var(--bg-white);
+            animation: fadeIn 0.5s 0.1s ease-in-out forwards;
+            opacity: 0;
+            border-left-width: 5px;
             border-left-style: solid;
-            margin-bottom: 1.5em; /* More space between results */
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06); /* Subtle shadow on results */
+            margin-bottom: 1.5em;
+            box-shadow: var(--shadow-sm);
         }
-        /* Apply border color based on prediction class - Uses Jinja filter |replace */
         .result-section.Not_Hate { border-left-color: var(--not-hate-border); }
         .result-section.Hate { border-left-color: var(--hate-border); }
-
         .error-message {
-            border-color: var(--error-border-color);
-            border-left-color: var(--error-border-color);
-            color: var(--error-text-color);
-            background-color: var(--error-bg-color); /* Specific background */
-            font-weight: bold;
+            border-color: var(--error-border);
+            border-left-color: var(--error-border);
+            color: var(--error-text);
+            background-color: var(--error-bg);
         }
         .info-message {
-            border-color: var(--info-border-color);
-            border-left-color: var(--info-border-color);
-            color: var(--info-text-color);
-            background-color: var(--info-bg-color); /* Specific background */
+            border-color: var(--info-border);
+            border-left-color: var(--info-border);
+            color: var(--info-text);
+            background-color: var(--info-bg);
         }
-        .error-message .icon, .info-message .icon { margin-right: 0.5em; font-size: 1.2em; }
+        .message-title { /* Shared style for Error/Info title */
+             font-weight: 600; display: flex; align-items: center; margin-bottom: 0.5em;
+        }
+         .message-title .icon { margin-right: 0.5em; font-size: 1.2em; }
 
-        .result-section h3, .info-message h3 {
+        .result-section h3 {
             margin-top: 0;
-             /* *** HEADING FONT *** */
-            font-family: var(--heading-font);
-            font-size: 1.4rem; /* Larger result title */
+            font-family: var(--heading-font); /* Use heading font */
+            font-size: 1.3rem;
             font-weight: 700;
-            margin-bottom: 1.2em;
-            padding-bottom: 0.7em;
+            margin-bottom: 1em;
+            padding-bottom: 0.6em;
             border-bottom: 1px solid var(--border-color);
-            color: var(--text-color);
+            color: var(--text-dark);
             text-transform: uppercase;
-            letter-spacing: 1.2px;
+            letter-spacing: 1px;
             display: flex;
             align-items: center;
         }
-        .result-section h3 .icon, .info-message h3 .icon { margin-right: 0.5em; font-size: 1.4rem; }
-        .result-section p { text-align: left; margin-bottom: 1em; color: var(--text-color); display: flex; align-items: center; font-size: 1.1rem; } /* Larger result status text */
-        .result-section p .icon { margin-right: 0.6em; font-size: 1.3rem; opacity: 0.9; }
+        .result-section h3 .icon { margin-right: 0.6em; font-size: 1.3rem; color: var(--primary-accent);}
+        .result-section p.status { /* Specific class for status paragraph */
+             text-align: left; margin-bottom: 1em; color: var(--text-dark); display: flex; align-items: center; font-size: 1.1rem; font-weight: 500;
+        }
+        .result-section p.status .icon { margin-right: 0.6em; font-size: 1.4rem; }
 
-        .probabilities {
-            margin-top: 1.8em;
-            font-size: 1rem;
-            color: var(--secondary-text-color);
-            border-top: 1px dashed var(--border-color);
-            padding-top: 1.8em;
-        }
-        .probabilities h4 {
-            margin-top: 0;
-            margin-bottom: 1.2em;
-            font-weight: 700;
-            color: var(--text-color);
-            font-size: 1.1rem; /* Slightly larger probability title */
-            display: flex;
-            align-items: center;
-        }
-        .probabilities h4 .icon { margin-right: 0.5em; font-size: 1.15rem; opacity: 0.85; }
-        .probabilities strong.label { display: inline-block; min-width: 95px; /* Adjusted if needed */ font-weight: 700; margin-right: 12px; color: var(--text-color); }
-        .probabilities span.score { font-weight: 700; color: var(--text-color); font-size: 1.05rem; }
-        .probabilities div { margin-bottom: 0.8em; padding-left: 1.8em; position: relative; }
-        .probabilities div::before {
-            content: '▶'; /* Changed bullet */
-            position: absolute;
-            left: 0.3em;
-            color: var(--button-hover-bg-color); /* Use a theme color */
-            font-size: 1rem; /* Adjusted size */
-            line-height: 1.7; /* Align with text */
-        }
+        .probabilities { margin-top: 1.5em; font-size: 1rem; color: var(--text-medium); border-top: 1px dashed var(--border-color); padding-top: 1.5em; }
+        .probabilities h4 { margin-top: 0; margin-bottom: 1em; font-weight: 600; color: var(--text-dark); font-size: 1rem; display: flex; align-items: center; }
+        .probabilities h4 .icon { margin-right: 0.5em; font-size: 1.1rem; opacity: 1; color: var(--primary-accent); }
+        .probabilities strong.label { display: inline-block; min-width: 80px; font-weight: 600; margin-right: 10px; color: var(--text-dark); }
+        .probabilities span.score { font-weight: 600; color: var(--primary-accent); font-size: 1rem; }
+        .probabilities div { margin-bottom: 0.7em; padding-left: 1.6em; position: relative; }
+        .probabilities div::before { content: '•'; position: absolute; left: 0.4em; color: var(--primary-accent); font-size: 1.1rem; line-height: 1.7; }
 
         /* --- About & Contact Sections --- */
-        #about, #contact {
-            border-top: 1px solid var(--border-color); /* Lighter top border */
-            margin-top: 3.5em;
-            padding-top: 3em; /* More top padding */
-            /* Uses the same .content-section styles for background, shadow, animation */
-        }
-        #about p, #contact p { color: var(--secondary-text-color); text-align: left; margin-bottom: 1.2em; font-size: 1.05rem; }
-        #about ul { list-style: none; padding-left: 1em; margin-top: 1em;} /* Indent list slightly */
-        #about li { margin-bottom: 0.8em; position: relative; padding-left: 1.5em; } /* Space for custom bullet */
-        #about li::before {
-            content: '✓'; /* Checkmark bullet */
-            position: absolute;
-            left: 0;
-            color: var(--button-hover-bg-color); /* Use theme color */
-            font-weight: bold;
-        }
+        #about p, #contact p { color: var(--text-medium); font-size: 1rem; line-height: 1.8; }
+        #about ul { list-style: disc; padding-left: 1.5em; margin-top: 1em; color: var(--text-medium);}
+        #about li { margin-bottom: 0.7em; }
 
-        #contact ul { list-style: none; padding: 0; }
-        #contact li { margin-bottom: 1em; color: var(--secondary-text-color); display: flex; align-items: center; font-size: 1.05rem; }
-        #contact li .icon { margin-right: 0.8em; width: 22px; text-align: center; opacity: 0.9; font-size: 1.2rem; color: var(--button-bg-color); /* Use theme color */ }
-        #contact strong { color: var(--text-color); min-width: 90px; display: inline-block; }
-        #contact a { color: var(--button-bg-color); text-decoration: none; transition: color 0.2s ease; }
-        #contact a:hover { color: var(--button-hover-bg-color); text-decoration: underline; }
+        #contact ul { list-style: none; padding: 0; margin-top: 1.5em; }
+        #contact li { margin-bottom: 1.2em; color: var(--text-medium); display: flex; align-items: flex-start; /* Align items top */ font-size: 1rem; }
+        #contact li .icon {
+            margin-right: 1em;
+            width: 20px; /* Fixed width */
+            text-align: center;
+            opacity: 1;
+            font-size: 1.3rem;
+            color: var(--primary-accent);
+            margin-top: 0.1em; /* Slight top adjustment */
+            flex-shrink: 0; /* Prevent icon shrinking */
+        }
+        #contact .contact-info { /* Wrap text for alignment */
+            display: flex;
+            flex-direction: column;
+        }
+        #contact strong { /* Label (Email, Phone, Address) */
+             font-weight: 600; color: var(--text-dark); display: block; margin-bottom: 0.1em;
+        }
+        #contact span { /* Actual value */
+            color: var(--text-medium);
+        }
+        #contact a {
+            color: var(--primary-accent);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+        #contact a:hover { color: var(--primary-accent-hover); text-decoration: underline; }
 
         /* --- Footer --- */
         .footer {
-            background-color: var(--header-bg-color); /* Match header background */
-            color: var(--secondary-text-color); /* Use secondary text color */
+            background-color: var(--header-bg);
+            color: #9ca3af; /* Lighter text for footer */
             text-align: center;
-            padding: 2em 2.5em; /* More padding */
-            margin-top: 5em; /* More space before footer */
-            border-top: 3px solid var(--button-bg-color); /* Accent border */
-            font-size: 0.95rem;
+            padding: 2.5em 2em;
+            margin-top: 4em;
+            border-top: 4px solid var(--primary-accent); /* Accent border top */
+            font-size: 0.9rem;
         }
-        .footer p { margin: 0; color: #adb5bd; /* Lighter gray for footer text */ }
-        .footer a { color: #dee2e6; /* Lighter link color */ text-decoration: none; transition: color 0.2s ease; }
-        .footer a:hover { color: #ffffff; }
+        .footer p { margin: 0; margin-bottom: 0.5em; }
+        .footer a { color: #d1d5db; text-decoration: none; transition: color 0.2s ease; font-weight: 500; }
+        .footer a:hover { color: var(--bg-white); }
 
         /* --- Animation Keyframes --- */
-        @keyframes fadeInBody {
-             from { opacity: 0; }
-             to { opacity: 1; }
-        }
+        @keyframes fadeInBody { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideUpFadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        @keyframes fadeIn {
-             from { opacity: 0; transform: translateY(10px); } /* Add slight upward move */
-             to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes slideUpFadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        /* --- Responsive (Basic Example) --- */
+        @media (max-width: 768px) {
+            .header-bar { padding: 0.8em 1.5em; }
+            .header-bar .logo h1 { font-size: 1.4rem; }
+            .header-bar nav a { margin-left: 1em; font-size: 0.9rem; }
+            #hero { padding: 3em 1em; }
+            #hero h2 { font-size: 2.2rem; }
+            #hero p { font-size: 1.05rem; }
+            .container { padding: 0 1em; }
+            .content-card { padding: 2em 1.5em; }
+            .section-title { font-size: 1.5rem; }
+            button[type="submit"] { font-size: 1rem; padding: 12px 20px;}
         }
 
     </style>
@@ -353,7 +369,7 @@
 
     <header class="header-bar">
         <div class="logo">
-             <h1><span class="icon">🛡️</span> Hate Speech Detector</h1>
+             <h1><span class="icon">🛡️</span> Detector</h1> <!-- Shortened Name -->
         </div>
         <nav>
             <a href="#analysis-section">Analyze</a>
@@ -362,113 +378,133 @@
         </nav>
     </header>
 
-    <!-- Main Analysis Section -->
-    <main id="analysis-section" class="content-section">
-        <h2 class="section-title"><span class="icon">📝</span> Analyze Text</h2> <!-- Added icon -->
-        <p class="intro-text">Enter text below or upload a file to predict if the content is likely <strong>Hate</strong> speech or <strong>Not Hate</strong> speech using our machine learning model.</p>
+    <!-- Hero Section -->
+    <section id="hero">
+        <h2>Hate Speech Detection Engine</h2>
+        <p>Analyze text content instantly using our machine learning model to identify potentially harmful language.</p>
+    </section>
 
-        <form action="/predict" method="post" enctype="multipart/form-data">
-            <div>
-                <label for="text_input">Option 1: Analyze Single Text</label>
-                <!-- Use submitted_text to keep input after submission -->
-                <textarea id="text_input" name="text_input" rows="5" placeholder="Paste or type your content here...">{{ submitted_text }}</textarea>
-            </div>
-            <div class="file-upload-area">
-                <label for="file_upload_input" class="label-above">Option 2: Upload File for Batch Analysis</label> <!-- Changed label target -->
-                <label for="file_upload_input" class="file-input-wrapper"> <!-- This label is clickable -->
-                    <span class="file-upload-text">Click or Drag File Here (CSV, XLSX, XLS)</span>
-                    <input type="file" id="file_upload_input" name="file_upload" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
-                    <span id="file-name">No file selected</span>
-                 </label>
-                 <p class="instructions">
-                    Ensure your file has a column named exactly '<strong>Content</strong>' containing the text to analyze. Results (<strong>Hate / Not Hate</strong> prediction and confidences) will be provided as a downloadable CSV file.
-                 </p>
-            </div>
-            <button type="submit"><span class="icon">🔍</span> Analyze Content</button>
-        </form>
-
-
-        <div class="results-wrapper">
-            <!-- Error Message Display -->
-            {% if error_message %}
-                <div class="error-message">
-                     <span class="icon">⚠️</span> <strong>Error:</strong> {{ error_message }}
+    <div class="container">
+        <!-- Main Analysis Section -->
+        <section id="analysis-section" class="content-card">
+             <h2 class="section-title"><span class="icon">📝</span> Analyze Content</h2>
+             <form action="/predict" method="post" enctype="multipart/form-data">
+                <div>
+                    <label for="text_input">Option 1: Analyze Single Text</label>
+                    <textarea id="text_input" name="text_input" rows="5" placeholder="Paste or type your content here...">{{ submitted_text }}</textarea>
                 </div>
-            {% endif %}
-             <!-- Info Message Display -->
-             {% if info_message %}
-                 <div class="info-message">
-                      <h3><span class="icon">ℹ️</span> Status</h3>
-                      <p>{{ info_message }}</p>
-                 </div>
-             {% endif %}
+                <div class="file-upload-area">
+                    <label for="file_upload_input">Option 2: Upload File for Batch Analysis</label>
+                    <label for="file_upload_input" class="file-input-wrapper">
+                        <span class="file-upload-text">Click or Drag File Here (CSV, XLSX, XLS)</span>
+                        <input type="file" id="file_upload_input" name="file_upload" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+                        <span id="file-name">No file selected</span>
+                     </label>
+                     <p class="instructions">
+                        Ensure your file has a column named '<strong>Content</strong>'. Results (Hate / Not Hate) provided for download (feature may vary).
+                     </p>
+                </div>
+                <button type="submit"><span class="icon">🔍</span> Analyze Content</button>
+            </form>
 
-            <!-- Single Text Result Display -->
-            <!-- Only show if prediction_text exists and there are no errors/info messages blocking it -->
-            {% if prediction_text and not error_message %}
-                <!-- Add class based on prediction (replace space with underscore) -->
-                <div class="result-section {{ prediction_text | replace(' ', '_') }}">
-                    <h3><span class="icon">📊</span> Analysis Report (Single Text)</h3>
-                    <p>
-                        <!-- Conditional Icon based on prediction -->
-                        {% if prediction_text == 'Not Hate' %}
-                            <span class="icon">✅</span>
-                        {% elif prediction_text == 'Hate' %}
-                            <span class="icon">🚫</span>
-                        {% else %}
-                             <span class="icon">❓</span> <!-- Icon for unknown cases -->
+            <div class="results-wrapper">
+                <!-- Error Message -->
+                {% if error_message %}
+                    <div class="error-message">
+                         <div class="message-title"><span class="icon">⚠️</span> Error</div>
+                         {{ error_message }}
+                    </div>
+                {% endif %}
+                 <!-- Info Message -->
+                 {% if info_message %}
+                     <div class="info-message">
+                          <div class="message-title"><span class="icon">ℹ️</span> Status</div>
+                          {{ info_message }}
+                     </div>
+                 {% endif %}
+
+                <!-- Single Text Result -->
+                {% if prediction_text and not error_message and not info_message %}
+                    <div class="result-section {{ prediction_text | replace(' ', '_') }}">
+                        <h3><span class="icon">📊</span> Analysis Report</h3>
+                        <p class="status"> <!-- Added class -->
+                            {% if prediction_text == 'Not Hate' %}
+                                <span class="icon" style="color: #10b981;">✅</span> <!-- Green Check -->
+                            {% elif prediction_text == 'Hate' %}
+                                <span class="icon" style="color: #ef4444;">🚫</span> <!-- Red Stop -->
+                            {% endif %}
+                            <strong>Status:</strong> {{ prediction_text }} <!-- Added non-breaking space -->
+                        </p>
+                        {% if probabilities %}
+                            <div class="probabilities">
+                                <h4><span class="icon">📈</span>Confidence Breakdown:</h4>
+                                {% for label, score in probabilities.items() %}
+                                   <div><strong class="label">{{ label }}:</strong> <span class="score">{{ score }}</span></div>
+                                {% endfor %}
+                            </div>
                         {% endif %}
-                        <strong>Status:</strong> {{ prediction_text }}
-                    </p>
-                    <!-- Display Probabilities if available -->
-                    {% if probabilities %}
-                        <div class="probabilities">
-                            <h4><span class="icon">📈</span>Confidence Breakdown:</h4>
-                            {% for label, score in probabilities.items() %}
-                               <div><strong class="label">{{ label }}:</strong> <span class="score">{{ score }}</span></div>
-                            {% endfor %}
-                        </div>
-                    {% endif %}
-                </div>
-            {% endif %}
-        </div>
-    </main>
+                    </div>
+                {% endif %}
+            </div>
+        </section>
 
-    <!-- About Section -->
-    <section id="about" class="content-section">
-        <h2 class="section-title"><span class="icon">ℹ️</span> About This Tool</h2>
-        <p>
-            The Hate Speech Detector utilizes a Machine Learning model trained to classify text content. It predicts whether the provided text is likely to be considered <strong>Hate</strong> speech or <strong>Not Hate</strong> speech based on patterns learned from a large dataset.
-        </p>
-        <p>
-            The underlying model might have been originally trained on categories like "Neutral," "Offensive," and "Hateful." For user clarity in this tool, predictions corresponding to potentially harmful categories (e.g., "Offensive," "Hateful") are grouped under the label "<strong>Hate</strong>," while others (e.g., "Neutral") are labeled as "<strong>Not Hate</strong>." The confidence scores reflect the model's certainty for these simplified output categories.
-        </p>
-        <p>
-            <strong>Important Considerations:</strong>
-            <ul>
-                <li>This model primarily identifies patterns associated with hate speech but may not distinguish nuances, sarcasm, or context perfectly.</li>
-                <li>It does not differentiate between varying degrees or types of problematic language within the "Hate" category (e.g., mild offense vs. severe hate speech).</li>
-                <li>Automated analysis provides an indication, not a definitive judgment. False positives and false negatives are possible.</li>
-                <li>Always consider the context and exercise human judgment when interpreting results, especially for sensitive content moderation decisions.</li>
-            </ul>
-        </p>
-    </section>
+        <!-- About Section -->
+        <section id="about" class="content-card">
+            <h2 class="section-title"><span class="icon">ℹ️</span> About This Tool</h2>
+            <p>
+                The Hate Speech Detector utilizes a Machine Learning model trained to classify text content. It predicts whether the provided text is likely to be considered <strong>Hate</strong> speech or <strong>Not Hate</strong> speech based on patterns learned from a large dataset.
+            </p>
+            <p>
+                The underlying model might have been originally trained on categories like "Neutral," "Offensive," and "Hateful." For user clarity in this tool, predictions corresponding to potentially harmful categories are grouped under "<strong>Hate</strong>," while others are labeled as "<strong>Not Hate</strong>."
+            </p>
+            <p>
+                <strong>Important Considerations:</strong>
+                <ul>
+                    <li>The model identifies patterns but may not grasp nuances, sarcasm, or context perfectly.</li>
+                    <li>It doesn't differentiate degrees of severity within the "Hate" category.</li>
+                    <li>Results are indicators, not definitive judgments. False positives/negatives are possible.</li>
+                    <li>Human oversight is recommended for sensitive content decisions.</li>
+                </ul>
+            </p>
+        </section>
 
-    <!-- Contact Section -->
-    <section id="contact" class="content-section">
-         <h2 class="section-title"><span class="icon">✉️</span> Contact Information</h2>
-         <p>For inquiries, feedback, or reporting issues regarding this Hate Speech Detection tool, please use the placeholder details below.</p>
-         <ul>
-            <li><span class="icon">📧</span><strong>Email:</strong> <a href="mailto:support@hatespeechdetector.example.com">support@hatespeechdetector.example.com</a></li>
-            <li><span class="icon">📞</span><strong>Phone:</strong> +1 (555) 987-6543</li>
-            <li><span class="icon">🏢</span><strong>Address:</strong> 456 Ethics Drive, Insight City, CA 90210</li>
-            <li><span class="icon">🕒</span><strong>Support Hours:</strong> Mon-Fri, 9:00 AM - 5:00 PM (PT)</li>
-         </ul>
-    </section>
+        <!-- Contact Section -->
+        <section id="contact" class="content-card">
+             <h2 class="section-title"><span class="icon">✉️</span> Contact Information</h2>
+             <p>For inquiries or feedback regarding this tool, please use the details below.</p>
+             <ul>
+                <li>
+                    <span class="icon">📧</span>
+                    <div class="contact-info">
+                        <strong>Email</strong>
+                        <!-- *** UPDATED EMAIL *** -->
+                        <span><a href="mailto:spant9999@gmail.com">spant9999@gmail.com</a></span>
+                    </div>
+                </li>
+                <li>
+                    <span class="icon">📞</span>
+                    <div class="contact-info">
+                        <strong>Phone</strong>
+                        <!-- *** UPDATED PHONE *** -->
+                        <span><a href="tel:+917011057633">+91 70110 57633</a></span> <!-- Added +91 country code assumption -->
+                    </div>
+                </li>
+                <li>
+                    <span class="icon">🏢</span>
+                    <div class="contact-info">
+                        <strong>Address</strong>
+                        <!-- *** UPDATED ADDRESS *** -->
+                        <span>Bangalore - Whitefield, Karnataka, India</span> <!-- Added State/Country assumption -->
+                    </div>
+                </li>
+             </ul>
+        </section>
+    </div> <!-- /container -->
 
     <!-- Footer Section -->
     <footer class="footer">
-        <p>© 2024 Hate Speech Detection Project. All Rights Reserved. | <a href="#">Privacy Policy</a> | <a href="#analysis-section">Back to Top</a></p> <!-- Added Privacy Policy link example -->
+        <p>© 2024 Hate Speech Detection Project. All Rights Reserved.</p>
+        <p><a href="#">Privacy Policy</a> | <a href="#analysis-section">Back to Top</a></p>
     </footer>
 
     <!-- Simple JS to display selected filename -->
@@ -478,11 +514,16 @@
         if (fileInput) {
             fileInput.addEventListener('change', function() {
                 if (fileInput.files.length > 0) {
-                    // Display the name of the first selected file
-                    fileNameDisplay.textContent = `Selected: ${fileInput.files[0].name}`; // Added "Selected: "
+                    // Display only the filename, prevent long paths
+                    let fileName = fileInput.files[0].name;
+                    if (fileName.length > 30) { // Truncate long filenames
+                         fileName = fileName.substring(0, 15) + '...' + fileName.substring(fileName.length - 12);
+                    }
+                    fileNameDisplay.textContent = `Selected: ${fileName}`;
+                    fileNameDisplay.style.color = 'var(--primary-accent)'; // Change color on select
                 } else {
-                    // Reset text if no file is selected (e.g., user cancels)
                     fileNameDisplay.textContent = 'No file selected';
+                    fileNameDisplay.style.color = null; // Reset color
                 }
             });
         }
