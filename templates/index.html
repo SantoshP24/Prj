@@ -219,7 +219,7 @@
             margin-bottom: 1.5em; /* More space between results */
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06); /* Subtle shadow on results */
         }
-
+        /* Apply border color based on prediction class - Uses Jinja filter |replace */
         .result-section.Not_Hate { border-left-color: var(--not-hate-border); }
         .result-section.Hate { border-left-color: var(--hate-border); }
 
@@ -294,8 +294,15 @@
             /* Uses the same .content-section styles for background, shadow, animation */
         }
         #about p, #contact p { color: var(--secondary-text-color); text-align: left; margin-bottom: 1.2em; font-size: 1.05rem; }
-        #about ul { list-style: inside; padding-left: 1em; margin-top: 1em;} /* Indent list */
-        #about li { margin-bottom: 0.6em; }
+        #about ul { list-style: none; padding-left: 1em; margin-top: 1em;} /* Indent list slightly */
+        #about li { margin-bottom: 0.8em; position: relative; padding-left: 1.5em; } /* Space for custom bullet */
+        #about li::before {
+            content: '✓'; /* Checkmark bullet */
+            position: absolute;
+            left: 0;
+            color: var(--button-hover-bg-color); /* Use theme color */
+            font-weight: bold;
+        }
 
         #contact ul { list-style: none; padding: 0; }
         #contact li { margin-bottom: 1em; color: var(--secondary-text-color); display: flex; align-items: center; font-size: 1.05rem; }
@@ -363,17 +370,18 @@
         <form action="/predict" method="post" enctype="multipart/form-data">
             <div>
                 <label for="text_input">Option 1: Analyze Single Text</label>
+                <!-- Use submitted_text to keep input after submission -->
                 <textarea id="text_input" name="text_input" rows="5" placeholder="Paste or type your content here...">{{ submitted_text }}</textarea>
             </div>
             <div class="file-upload-area">
-                <label for="file_upload">Option 2: Upload File for Batch Analysis</label>
-                <label for="file_upload_input" class="file-input-wrapper">
+                <label for="file_upload_input" class="label-above">Option 2: Upload File for Batch Analysis</label> <!-- Changed label target -->
+                <label for="file_upload_input" class="file-input-wrapper"> <!-- This label is clickable -->
                     <span class="file-upload-text">Click or Drag File Here (CSV, XLSX, XLS)</span>
                     <input type="file" id="file_upload_input" name="file_upload" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
                     <span id="file-name">No file selected</span>
                  </label>
                  <p class="instructions">
-                    Ensure your file has a column named exactly '<strong>Content</strong>' containing the text to analyze. Results (<strong>Hate / Not Hate</strong> prediction) will be provided as a downloadable CSV file.
+                    Ensure your file has a column named exactly '<strong>Content</strong>' containing the text to analyze. Results (<strong>Hate / Not Hate</strong> prediction and confidences) will be provided as a downloadable CSV file.
                  </p>
             </div>
             <button type="submit"><span class="icon">🔍</span> Analyze Content</button>
@@ -381,13 +389,13 @@
 
 
         <div class="results-wrapper">
-            <!-- Error Message -->
+            <!-- Error Message Display -->
             {% if error_message %}
                 <div class="error-message">
                      <span class="icon">⚠️</span> <strong>Error:</strong> {{ error_message }}
                 </div>
             {% endif %}
-             <!-- Info Message -->
+             <!-- Info Message Display -->
              {% if info_message %}
                  <div class="info-message">
                       <h3><span class="icon">ℹ️</span> Status</h3>
@@ -395,18 +403,24 @@
                  </div>
              {% endif %}
 
-            <!-- Single Text Result -->
-            {% if prediction_text and not error_message and not info_message %}
+            <!-- Single Text Result Display -->
+            <!-- Only show if prediction_text exists and there are no errors/info messages blocking it -->
+            {% if prediction_text and not error_message %}
+                <!-- Add class based on prediction (replace space with underscore) -->
                 <div class="result-section {{ prediction_text | replace(' ', '_') }}">
                     <h3><span class="icon">📊</span> Analysis Report (Single Text)</h3>
                     <p>
+                        <!-- Conditional Icon based on prediction -->
                         {% if prediction_text == 'Not Hate' %}
                             <span class="icon">✅</span>
                         {% elif prediction_text == 'Hate' %}
                             <span class="icon">🚫</span>
+                        {% else %}
+                             <span class="icon">❓</span> <!-- Icon for unknown cases -->
                         {% endif %}
                         <strong>Status:</strong> {{ prediction_text }}
                     </p>
+                    <!-- Display Probabilities if available -->
                     {% if probabilities %}
                         <div class="probabilities">
                             <h4><span class="icon">📈</span>Confidence Breakdown:</h4>
@@ -464,8 +478,10 @@
         if (fileInput) {
             fileInput.addEventListener('change', function() {
                 if (fileInput.files.length > 0) {
+                    // Display the name of the first selected file
                     fileNameDisplay.textContent = `Selected: ${fileInput.files[0].name}`; // Added "Selected: "
                 } else {
+                    // Reset text if no file is selected (e.g., user cancels)
                     fileNameDisplay.textContent = 'No file selected';
                 }
             });

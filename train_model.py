@@ -1,18 +1,18 @@
 # File: train_model.py
 
-import pandas as pd
-import numpy as np
+import os  # Import os module to check file existence
 import re
 import string
-import nltk
+
+import joblib
+import numpy as np
+import pandas as pd
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
-from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import classification_report
-import joblib
-import os # Import os module to check file existence
+from sklearn.model_selection import train_test_split
 
 # --- NLTK Data Check/Download ---
 # It's good practice to ensure NLTK data is available.
@@ -99,7 +99,9 @@ print("\nAttempting to convert label column to integer...")
 # --->>> FILTERING STEP TO REMOVE INVALID 'Label' STRINGS or other non-numeric values <<<---
 print(f"Filtering out rows where '{LABEL_COLUMN}' column is not '0' or '1'...")
 initial_rows_before_filter = len(df)
-# Keep only rows where the value in the LABEL_COLUMN IS '0' or '1' (as strings)
+# Keep only rows where the value in the LABEL_COLUMN IS '0' or '1' (as strings or numbers)
+# Convert to string first to handle potential mixed types robustly
+df[LABEL_COLUMN] = df[LABEL_COLUMN].astype(str)
 valid_labels = ['0', '1']
 df = df[df[LABEL_COLUMN].isin(valid_labels)] # Keep only rows where Label is '0' or '1'
 rows_after_filter = len(df)
@@ -169,17 +171,37 @@ print(f"TF-IDF matrix shape: {X_tfidf.shape}")
 # --- Train-Test Split ---
 print("\nSplitting data into train and test sets...")
 try:
+    # Ensure there are enough samples in each class for stratification
+    min_class_count = df['target'].value_counts().min()
+    if min_class_count < 2: # Need at least 2 samples per class for split + stratify
+         raise ValueError(f"The smallest class has only {min_class_count} samples, which is insufficient for train/test splitting with stratification. Need at least 2.")
+
+    test_size = 0.2
+    # Adjust test_size if one class has very few samples (e.g., 2 or 3)
+    # Ensure at least 1 sample of each class is in the test set
+    if min_class_count * test_size < 1:
+        # Calculate minimum test_size to get at least 1 sample of the minority class
+        required_test_size = 1.0 / min_class_count
+        print(f"Warning: Adjusting test_size to {required_test_size:.3f} to ensure minority class is present in test set.")
+        test_size = required_test_size
+
     X_train, X_test, y_train, y_test = train_test_split(
         X_tfidf, y,
-        test_size=0.2,     # 80% training, 20% testing
+        test_size=test_size,     # Adjusted test size
         random_state=42,   # For reproducibility
         stratify=y         # IMPORTANT for imbalanced datasets
     )
     print(f"Train set size: {X_train.shape[0]}, Test set size: {X_test.shape[0]}")
+    print("Train set label distribution:")
+    print(y_train.value_counts())
+    print("Test set label distribution:")
+    print(y_test.value_counts())
+
 except ValueError as e:
     print(f"Error during train/test split: {e}")
-    print("This might happen if one class has too few samples for stratification.")
-    print("Consider checking the label distribution carefully.")
+    print("This might happen if one class has too few samples for stratification, even after filtering.")
+    print("Check the final label distribution carefully:")
+    print(df['target'].value_counts())
     exit()
 
 
@@ -202,13 +224,35 @@ try:
     y_pred = model.predict(X_test)
     print("\nClassification Report:")
     # Ensure target_names matches the number of unique classes found in y_test/y_pred
-    unique_labels = np.unique(np.concatenate((y_test, y_pred)))
-    current_target_names = [TARGET_CLASS_NAMES[i] for i in unique_labels if i < len(TARGET_CLASS_NAMES)]
-    print(classification_report(y_test, y_pred, target_names=current_target_names))
+    unique_labels = np.unique(np.concatenate((y_test, y_pred))) # Combine true and predicted labels to find all occurring labels
+    unique_labels.sort() # Ensure order [0, 1]
+
+    # Check if both 0 and 1 are present in the actual test labels or predictions
+    if len(unique_labels) == 2 and unique_labels[0] == 0 and unique_labels[1] == 1:
+         current_target_names = [TARGET_CLASS_NAMES[0], TARGET_CLASS_NAMES[1]]
+         print(classification_report(y_test, y_pred, target_names=current_target_names))
+    elif len(unique_labels) == 1:
+         # Only one class predicted or present in y_test
+         present_label = unique_labels[0]
+         if present_label < len(TARGET_CLASS_NAMES):
+             current_target_names = [TARGET_CLASS_NAMES[present_label]]
+             print(f"Warning: Only one class ({TARGET_CLASS_NAMES[present_label]}) present in test results. Evaluation might be limited.")
+             print(classification_report(y_test, y_pred, target_names=current_target_names, zero_division=0))
+         else:
+             print("Warning: Only one class present, but its index is out of bounds for TARGET_CLASS_NAMES.")
+             print(classification_report(y_test, y_pred, zero_division=0))
+    else:
+        print("Warning: Unexpected unique labels found in test results. Using default numeric labels.")
+        print(f"Unique labels found: {unique_labels}")
+        print(classification_report(y_test, y_pred, zero_division=0))
+
 except Exception as e:
     print(f"Error during evaluation: {e}")
     print("Trying evaluation without target names...")
-    print(classification_report(y_test, y_pred))
+    try:
+        print(classification_report(y_test, y_pred, zero_division=0))
+    except Exception as e_inner:
+        print(f"Secondary evaluation attempt failed: {e_inner}")
 
 
 # --- Save Model and Vectorizer ---

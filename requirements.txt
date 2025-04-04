@@ -1,10 +1,10 @@
 # requirements.txt
 pandas~=2.2.3
-numpy~=2.2.4
-nltk~=3.9.1
-scikit-learn~=1.6.1
+numpy~=1.26.4  # Compatibility with scikit-learn 1.4/1.5 often needs numpy<2
+nltk~=3.8.1    # Or a version compatible with your environment
+scikit-learn~=1.5.0 # Or match the version used for training if specific needed
 joblib~=1.4.2
-Flask~=3.1.0
-openpyxl~=3.1.5
-gunicorn
-Vectorizer
+Flask~=3.0.3
+openpyxl~=3.1.5 # For reading .xlsx files
+gunicorn       # Optional: For production deployment
+werkzeug       # Flask dependency, ensure version compatibility if issues arise
