@@ -8,13 +8,14 @@ echo "Starting build script..."
 pip install -r requirements.txt
 echo "Dependencies installed."
 
-# Create the directory for NLTK data within the project structure
-mkdir -p ./nltk_data
-echo "Created ./nltk_data directory."
+# --- CHANGE: Target a standard Render NLTK path ---
+# Ensure the target directory exists (Render might create it, but -p is safe)
+mkdir -p /opt/render/nltk_data
+echo "Ensured /opt/render/nltk_data directory exists."
 
-# Download necessary NLTK data INTO the created directory
-echo "Downloading NLTK data..."
-python -m nltk.downloader -d ./nltk_data stopwords wordnet omw-1.4
-echo "NLTK data downloaded."
+# Download necessary NLTK data INTO the standard Render path
+echo "Downloading NLTK data (stopwords, wordnet, omw-1.4) to /opt/render/nltk_data..."
+python -m nltk.downloader -d /opt/render/nltk_data stopwords wordnet omw-1.4
+echo "NLTK data download attempt finished."
 
 echo "Build script finished successfully."
